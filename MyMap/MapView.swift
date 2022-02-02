@@ -11,6 +11,8 @@ import MapKit
 struct MapView: UIViewRepresentable {
     
     let searchKey: String
+    let mapType: MKMapType
+    var dispMapType: MKMapType = .standard
     
     func makeUIView(context: Context) -> MKMapView {
         MKMapView()
@@ -18,6 +20,8 @@ struct MapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         print(searchKey)
+        
+        uiView.mapType = mapType
         
         let geocoder = CLGeocoder()
         //CLGreocoderクラスは緯度経度から住所を検索することができる。また、住所から緯度経度を検索できる。
@@ -48,11 +52,15 @@ struct MapView: UIViewRepresentable {
                     //MKPOintAnnotationはピンを置くための機能が利用できる。
                     
                     pin.coordinate = targetCoordinate
+                    //ピンを置く場所に緯度経度を設定
                     
                     pin.title = searchKey
+                    //ピンのタイトルを設定
                     uiView.addAnnotation(pin)
+                    //ピンを地図上におく
                     
                     uiView.region = MKCoordinateRegion(
+                        //MKCoordinateRagionメソッドでは中心位置(緯度経度)と縦横の表示する幅(メートル単位)を指定できる
                     center: targetCoordinate,
                     latitudinalMeters: 500.0,
                     longitudinalMeters: 500.0
@@ -64,6 +72,6 @@ struct MapView: UIViewRepresentable {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(searchKey: "東京タワー")
+        MapView(searchKey: "東京タワー", mapType: .standard)
     }
 }
